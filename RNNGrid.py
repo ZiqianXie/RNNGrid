@@ -51,7 +51,7 @@ class RNNGridLayer(nn.Module):
             newgate = torch.tanh(i_n + resetgate * h_n)
             hy = newgate + inputgate * (hiddens[-1] - newgate)
             o = torch.softmax(self.conv_ho(hy), 1)
-            diff = (conv2d(o[:, 4:5], self.gather_kernel, padding=1) - o)**2 * o
+            diff = (conv2d(o[:, 4:5], self.gather_kernel, padding=1) - o[:, 4:5])**2 * o
             loss = loss + Loss(1 - o[:, 4], mask) + diff * self.loss_weight
             outs.append(o)
             # merged_o = conv2d(o, self.merge_kernel, padding=self.dist) + self.epsilon
